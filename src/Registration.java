@@ -9,9 +9,9 @@ public class Registration {
     public ArrayLinearList subjectList = new ArrayLinearList();
     public ArrayLinearList majorList = new ArrayLinearList();
 
-    private String subjectsFile = "Subjects.txt";
-    private String majorsFile = "Professions.txt";
-    private String examsFile = "Exams.txt";
+    private String subjectsFile = "src//Subjects.txt";
+    private String majorsFile = "src//Professions.txt";
+    private String examsFile = "src//Exams.txt";
 
     private Subject findSubject(String code) {
         for (int i = 0; i < subjectList.size(); i++) {
@@ -56,7 +56,9 @@ public class Registration {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split("/");
                 if (parts.length < 2) continue;
-                majorList.add(majorList.size(), new Major(parts[0], parts[1]));
+                String code = parts[0];
+                String name = parts[1];
+                majorList.add(majorList.size(), new Major(code, name));
             }
         } catch (IOException e) {
             System.out.println("Error reading majors: " + e);
@@ -72,7 +74,7 @@ public class Registration {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split("/");
                 if (parts.length < 3) continue;
-                String sCode = parts[0];
+                String studCode = parts[0];
                 String subCode = parts[1];
                 int score = Integer.parseInt(parts[2]);
                 Subject subj = findSubject(subCode);
@@ -80,10 +82,10 @@ public class Registration {
                     System.out.println("Warning: subject not found: " + subCode);
                     continue;
                 }
-                Student st = map.get(sCode);
+                Student st = map.get(studCode);
                 if (st == null) {
-                    st = new Student(sCode);
-                    map.put(sCode, st);
+                    st = new Student(studCode);
+                    map.put(studCode, st);
                 }
                 st.lessons.add(st.lessons.size(), new Lessons(subj, score));
             }
@@ -100,10 +102,17 @@ public class Registration {
     }
 
     private float scoreToGPA(int score) {
-        if (score >= 90) return 4.0f;
-        if (score >= 80) return 3.0f;
-        if (score >= 70) return 2.0f;
-        if (score >= 60) return 1.0f;
+        if (score >= 96) return 4.0f;
+        if (score >= 91) return 3.7f;
+        if (score >= 88) return 3.4f;
+        if (score >= 84) return 3.0f;
+        if (score >= 81) return 2.7f;
+        if (score >= 78) return 2.4f;
+        if (score >= 74) return 2.0f;
+        if (score >= 71) return 1.7f;
+        if (score >= 68) return 1.3f;
+        if (score >= 64) return 1.0f;
+        if (score >= 61) return 0.7f;
         return 0.0f;
     }
 
@@ -279,4 +288,98 @@ public class Registration {
             System.out.println("Record not found");
         }
     }
+
+    public void adminMenu(Scanner sc) {
+        System.out.print("Enter admin password: ");
+        String password = sc.nextLine().trim();
+
+        if (!password.equals("admin1234")) {
+            System.out.println("Access denied. Invalid password.");
+            return;
+        }
+
+        int choice;
+        do {
+            System.out.println("\n===== ADMIN MENU =====");
+            System.out.println("1. Add new subject");
+            System.out.println("2. Add new major");
+            System.out.println("3. Add new student");
+            System.out.println("0. Return to main menu");
+            System.out.print("Choose option: ");
+
+            while (!sc.hasNextInt()) {
+                System.out.println("Please enter a valid number.");
+                sc.next();
+                System.out.print("Choose option: ");
+            }
+            choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    addSubject(sc);
+                    break;
+                case 2:
+                    addMajor(sc);
+                    break;
+                case 3:
+                    addStudent(sc);
+                    break;
+                case 0:
+                    System.out.println("Returning to main menu...");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        } while (choice != 0);
+    }
+
+    private void addSubject(Scanner sc) {
+        System.out.print("Enter subject code: ");
+        String code = sc.nextLine().trim();
+        System.out.print("Enter subject name: ");
+        String name = sc.nextLine().trim();
+        System.out.print("Enter subject credit: ");
+        float credit = sc.nextFloat();
+        sc.nextLine();
+
+        subjectList.add(subjectList.size(), new Subject(code, name, credit));
+
+        // Append to file
+        try (PrintWriter pw = new PrintWriter(new FileWriter("Subjects.txt", true))) {
+            pw.println(code + "/" + name + "/" + credit);
+        } catch (IOException e) {
+            System.out.println("Error saving subject: " + e.getMessage());
+        }
+
+        System.out.println("Subject added successfully.");
+    }
+
+    private void addMajor(Scanner sc) {
+        System.out.print("Enter major code (2 letters): ");
+        String code = sc.nextLine().trim();
+        System.out.print("Enter major name: ");
+        String name = sc.nextLine().trim();
+
+        majorList.add(majorList.size(), new Major(code, name));
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter("Professions.txt", true))) {
+            pw.println(code + "/" + name);
+        } catch (IOException e) {
+            System.out.println("Error saving major: " + e.getMessage());
+        }
+
+        System.out.println("Major added successfully.");
+    }
+
+    private void addStudent(Scanner sc) {
+        System.out.print("Enter student code: ");
+        String code = sc.nextLine().trim();
+
+        Student s = new Student(code);
+        studentList.add(studentList.size(), s);
+
+        System.out.println("Student added successfully (no exams yet).");
+    }
+
 }
