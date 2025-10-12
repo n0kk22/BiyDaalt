@@ -5,7 +5,6 @@ public class Main {
         Registration reg = new Registration();
         Scanner sc = new Scanner(System.in);
 
-        // Load initial data
         reg.loadSubjects();
         reg.loadMajors();
         reg.loadExams();
@@ -27,11 +26,11 @@ public class Main {
 
             while (!sc.hasNextInt()) {
                 System.out.println("Please enter a valid number.");
-                sc.next(); // clear invalid input
+                sc.next(); 
                 System.out.print("Choose option: ");
             }
             choice = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine(); 
 
             switch (choice) {
                 case 1:
@@ -83,3 +82,4 @@ public class Main {
         sc.close();
     }
 }
+
