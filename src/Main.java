@@ -1,5 +1,3 @@
-package main;
-
 import java.util.Scanner;
 
 public class Main {
@@ -27,21 +25,20 @@ public class Main {
             System.out.print("Songolt: ");
 
             while (!sc.hasNextInt()) {
-<<<<<<< HEAD:src/Main.java
+
                 System.out.println("Please enter a valid number.");
                 sc.next(); 
                 System.out.print("Choose option: ");
             }
             choice = sc.nextInt();
             sc.nextLine(); 
-=======
+
                 System.out.println("Deerh toonuudaas oruulna uu.");
                 sc.next();
                 System.out.print("Songolt: ");
-            }
+
             choice = sc.nextInt();
             sc.nextLine();
->>>>>>> 5b278b0 (main func admin):src/main/Main.java
 
             switch (choice) {
                 case 1:
