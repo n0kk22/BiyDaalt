@@ -67,7 +67,7 @@ public class Registration {
     }
 
     public void loadExams() {
-        HashMap<String, Student> map = new HashMap<>();
+        HashMap<String, Student> map = new LinkedHashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(examsFile))) {
             String line;
             while ((line = br.readLine()) != null) {
