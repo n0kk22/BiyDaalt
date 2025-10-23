@@ -20,7 +20,6 @@ class RegistrationTest {
     private Path majorsFile;
     private Path examsFile;
 
-    // Reflection helper methods
     private Object getPrivateField(Object obj, String fieldName) throws Exception {
         Field field = obj.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
@@ -43,22 +42,19 @@ class RegistrationTest {
     void setUp() throws Exception {
         registration = new Registration();
 
-        // Create temporary files for testing
         subjectsFile = tempDir.resolve("Subjects.txt");
         majorsFile = tempDir.resolve("Professions.txt");
         examsFile = tempDir.resolve("Exams.txt");
 
-        // Set private file paths using reflection
         setPrivateField(registration, "subjectsFile", subjectsFile.toString());
         setPrivateField(registration, "majorsFile", majorsFile.toString());
         setPrivateField(registration, "examsFile", examsFile.toString());
 
-        // Create test data files
         createTestFiles();
     }
 
     private void createTestFiles() throws IOException {
-        // Create Subjects.txt
+
         String subjectsContent =
                 "CS101/Introduction to Computer Science/3.0\n" +
                         "MATH101/Calculus I/4.0\n" +
@@ -70,7 +66,6 @@ class RegistrationTest {
                         "ART101/Art Appreciation/2.5\n";
         Files.writeString(subjectsFile, subjectsContent);
 
-        // Create Professions.txt
         String majorsContent =
                 "CS/Computer Science\n" +
                         "MA/Mathematics\n" +
@@ -82,7 +77,6 @@ class RegistrationTest {
                         "AR/Art\n";
         Files.writeString(majorsFile, majorsContent);
 
-        // Create Exams.txt with comprehensive test data
         String examsContent =
                 "CS001/CS101/85\n" +
                         "CS001/MATH101/92\n" +
@@ -122,7 +116,6 @@ class RegistrationTest {
         assertEquals("Introduction to Computer Science", subject.name);
         assertEquals(3.0f, subject.credit);
 
-        // Test last subject
         Subject lastSubject = (Subject) registration.subjectList.get(registration.subjectList.size() - 1);
         assertEquals("ART101", lastSubject.code);
     }
@@ -151,13 +144,12 @@ class RegistrationTest {
         assertEquals("CS001", student.code);
         assertTrue(student.lessons.size() >= 4);
 
-        // Verify GPA was computed
         assertTrue(student.GPA > 0);
     }
 
     @Test
     void testLoadExamsWithNonexistentSubject() throws IOException {
-        // Create exams file with invalid subject
+
         String invalidExams = "CS999/INVALID999/85\n";
         Files.writeString(examsFile, invalidExams);
 
@@ -189,7 +181,6 @@ class RegistrationTest {
                 new Class<?>[]{String.class}, new Object[]{"NONEXISTENT"});
         assertNull(notFound);
 
-        // Test case sensitivity
         Subject caseSensitive = (Subject) callPrivateMethod(registration, "findSubject",
                 new Class<?>[]{String.class}, new Object[]{"cs101"}); // lowercase
         assertNull(caseSensitive);
@@ -221,7 +212,7 @@ class RegistrationTest {
 
     @Test
     void testScoreToGPA() throws Exception {
-        // Test boundary values for GPA conversion - ALL calls need the same format
+
         assertEquals(4.0f, callPrivateMethod(registration, "scoreToGPA",
                 new Class<?>[]{int.class}, new Object[]{96}));
         assertEquals(4.0f, callPrivateMethod(registration, "scoreToGPA",
@@ -282,19 +273,16 @@ class RegistrationTest {
         Student student = (Student) registration.studentList.get(0); // CS001
         float initialGPA = student.GPA;
 
-        // Recompute GPA - should be the same
         callPrivateMethod(registration, "computeGPA",
                 new Class<?>[]{Student.class}, new Object[]{student});
 
         assertEquals(initialGPA, student.GPA, 0.001f);
 
-        // Test with empty student
         Student emptyStudent = new Student("EMPTY001");
         callPrivateMethod(registration, "computeGPA",
                 new Class<?>[]{Student.class}, new Object[]{emptyStudent});
         assertEquals(0.0f, emptyStudent.GPA);
 
-        // Test with student having only F grades
         Student fStudent = new Student("FSTUDENT");
         Subject testSubject = (Subject) registration.subjectList.get(0);
         fStudent.lessons.add(fStudent.lessons.size(), new Lessons(testSubject, 50)); // F grade
@@ -302,7 +290,6 @@ class RegistrationTest {
                 new Class<?>[]{Student.class}, new Object[]{fStudent});
         assertEquals(0.0f, fStudent.GPA);
 
-        // Test with student having only A grades
         Student aStudent = new Student("ASTUDENT");
         aStudent.lessons.add(aStudent.lessons.size(), new Lessons(testSubject, 100)); // A grade
         callPrivateMethod(registration, "computeGPA",
@@ -317,10 +304,8 @@ class RegistrationTest {
 
         int initialSize = registration.studentList.size();
 
-        // Add record for existing student
         registration.addExamRecord("CS001", "HIST101", 85);
 
-        // Verify the record was added
         Student student = findStudentByCode("CS001");
         assertNotNull(student);
         boolean foundNewLesson = false;
@@ -334,7 +319,6 @@ class RegistrationTest {
         }
         assertTrue(foundNewLesson);
 
-        // Add record for new student
         registration.addExamRecord("NEW001", "CS101", 90);
         assertEquals(initialSize + 1, registration.studentList.size());
 
@@ -369,13 +353,11 @@ class RegistrationTest {
         assertNotNull(studentBefore);
         int lessonsBefore = studentBefore.lessons.size();
 
-        // Delete existing record
         registration.deleteExamRecord("CS001", "CS101");
 
         Student studentAfter = findStudentByCode("CS001");
         assertEquals(lessonsBefore - 1, studentAfter.lessons.size());
 
-        // Verify the specific lesson was removed
         boolean foundDeletedLesson = false;
         for (int i = 0; i < studentAfter.lessons.size(); i++) {
             Lessons lesson = (Lessons) studentAfter.lessons.get(i);
@@ -402,7 +384,6 @@ class RegistrationTest {
 
         System.setOut(System.out);
 
-        // Test with valid student but invalid subject
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
@@ -426,7 +407,6 @@ class RegistrationTest {
 
         String output = outContent.toString();
         assertTrue(output.contains("CS003") && output.contains("F="));
-        // CS003 should have 6 F grades
 
         System.setOut(System.out);
     }
@@ -443,14 +423,13 @@ class RegistrationTest {
 
         String output = outContent.toString();
         assertTrue(output.contains("Average GPA:"));
-        // Should display a formatted GPA value
 
         System.setOut(System.out);
     }
 
     @Test
     void testShowAverageGPAEmpty() throws Exception {
-        // Create empty exams file
+
         Files.writeString(examsFile, "");
 
         registration.loadExams();
@@ -501,11 +480,9 @@ class RegistrationTest {
         registration.loadSubjects();
         registration.loadExams();
 
-        // Modify data
         registration.addExamRecord("SAVETEST001", "CS101", 95);
         registration.addExamRecord("SAVETEST002", "MATH101", 87);
 
-        // Create new registration instance to test loading saved data
         Registration newRegistration = new Registration();
         setPrivateField(newRegistration, "subjectsFile", subjectsFile.toString());
         setPrivateField(newRegistration, "majorsFile", majorsFile.toString());
@@ -514,7 +491,6 @@ class RegistrationTest {
         newRegistration.loadSubjects();
         newRegistration.loadExams();
 
-        // Verify the new records were persisted
         boolean foundTest1 = false;
         boolean foundTest2 = false;
         for (int i = 0; i < newRegistration.studentList.size(); i++) {
@@ -574,7 +550,6 @@ class RegistrationTest {
 
         assertEquals(initialSize + 1, registration.subjectList.size());
 
-        // Verify the subject was added to the list
         Subject newSubject = (Subject) callPrivateMethod(registration, "findSubject",
                 new Class<?>[]{String.class}, new Object[]{"TEST001"});
         assertNotNull(newSubject);
@@ -595,7 +570,6 @@ class RegistrationTest {
 
         assertEquals(initialSize + 1, registration.majorList.size());
 
-        // Verify the major can be found
         Major newMajor = (Major) callPrivateMethod(registration, "findMajorByStudentCode",
                 new Class<?>[]{String.class}, new Object[]{"TE001"});
         assertNotNull(newMajor);
@@ -654,7 +628,6 @@ class RegistrationTest {
         System.setOut(System.out);
     }
 
-    // Helper method to find student by code
     private Student findStudentByCode(String code) {
         for (int i = 0; i < registration.studentList.size(); i++) {
             Student s = (Student) registration.studentList.get(i);
@@ -667,7 +640,7 @@ class RegistrationTest {
 
     @AfterEach
     void tearDown() {
-        // Reset System.out
+
         System.setOut(System.out);
     }
 }
