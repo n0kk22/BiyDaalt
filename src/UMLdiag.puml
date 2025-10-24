@@ -1,0 +1,50 @@
+@startuml
+class Subject {
+  +String code
+  +String name
+  +float credit
+  +toString()
+}
+
+class Major {
+  +String code
+  +String name
+  +toString()
+}
+
+class Lessons {
+  +Subject learned
+  +int score
+}
+
+class Student {
+  +String code
+  +float GPA
+  +Chain lessons
+}
+
+class Registration {
+  +ArrayLinearList studentList
+  +ArrayLinearList subjectList
+  +ArrayLinearList majorList
+  +loadSubjects()
+  +loadMajors()
+  +loadExams()
+  +computeGPA()
+  +addExamRecord()
+  +deleteExamRecord()
+  +showAverageGPA()
+}
+
+class Main {
+  +main()
+}
+
+Main --> Registration
+Registration --> Subject
+Registration --> Major
+Registration --> Student
+Student --> Lessons
+Lessons --> Subject
+
+@enduml
