@@ -1,3 +1,5 @@
+package biydaalt1;
+
 import dataStructures.Chain;
 
 public class Student {

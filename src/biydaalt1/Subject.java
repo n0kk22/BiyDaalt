@@ -1,3 +1,5 @@
+package biydaalt1;
+
 public class Subject {
     public String code;
     public String name;

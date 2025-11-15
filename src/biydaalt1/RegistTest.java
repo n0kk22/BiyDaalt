@@ -1,3 +1,5 @@
+package biydaalt1;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,7 +84,7 @@ class RegistrationTest {
                         "CS001/MATH101/92\n" +
                         "CS001/PHY101/78\n" +
                         "CS001/ENG101/88\n" +
-                        "CS001/CHEM101/45\n" +  // F grade
+                        "CS001/CHEM101/45\n" +
                         "MA001/MATH101/95\n" +
                         "MA001/CS101/82\n" +
                         "MA001/ENG101/76\n" +
@@ -91,12 +93,12 @@ class RegistrationTest {
                         "CS002/MATH101/98\n" +
                         "CS002/PHY101/94\n" +
                         "CS002/ENG101/92\n" +
-                        "CS003/CS101/42\n" +   // F grade
-                        "CS003/MATH101/44\n" + // F grade
-                        "CS003/PHY101/48\n" +  // F grade
-                        "CS003/ENG101/50\n" +  // F grade
-                        "CS003/CHEM101/55\n" + // F grade
-                        "CS003/BIO101/58\n" +  // F grade
+                        "CS003/CS101/42\n" +
+                        "CS003/MATH101/44\n" +
+                        "CS003/PHY101/48\n" +
+                        "CS003/ENG101/50\n" +
+                        "CS003/CHEM101/55\n" +
+                        "CS003/BIO101/58\n" +
                         "PH001/PHY101/91\n" +
                         "PH001/MATH101/89\n" +
                         "PH001/CS101/79\n" +

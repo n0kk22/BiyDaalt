@@ -1,3 +1,5 @@
+package biydaalt1;
+
 public class Lessons {
     public Subject learned;
     public int score;

@@ -1,3 +1,5 @@
+package biydaalt1;
+
 import dataStructures.ArrayLinearList;
 
 import java.io.*;
@@ -9,9 +11,9 @@ public class Registration {
     public ArrayLinearList subjectList = new ArrayLinearList();
     public ArrayLinearList majorList = new ArrayLinearList();
 
-    private String subjectsFile = "src//Subjects.txt";
-    private String majorsFile = "src//Professions.txt";
-    private String examsFile = "src//Exams.txt";
+    private String subjectsFile = "src//biydaalt1//Subjects.txt";
+    private String majorsFile = "src//biydaalt1//Professions.txt";
+    private String examsFile = "src//biydaalt1//Exams.txt";
 
     private Subject findSubject(String code) {
         for (int i = 0; i < subjectList.size(); i++) {
@@ -313,7 +315,7 @@ public class Registration {
                 System.out.print("Choose option: ");
             }
             choice = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine();
 
             switch (choice) {
                 case 1:
@@ -345,7 +347,6 @@ public class Registration {
 
         subjectList.add(subjectList.size(), new Subject(code, name, credit));
 
-        // Append to file
         try (PrintWriter pw = new PrintWriter(new FileWriter("Subjects.txt", true))) {
             pw.println(code + "/" + name + "/" + credit);
         } catch (IOException e) {
